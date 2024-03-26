@@ -10,13 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/bootstrap/dist/css/bootstrap.min.css">
     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-    <script src="assets/jquery/dist/jquery.min.js"></script>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
-    <header class="header">
-        <nav class="navbar navbar-expand-lg">
+    <header class="header shy-header">
+        <nav class="navbar navbar-expand-lg" data-bs-theme="light">
             <a class="navbar-brand" href="#">
                 <img src="assets/images/Logo.png" class="img-fluid" alt="">
             </a>
@@ -137,13 +136,13 @@
                         <h3>🚀• The Services for You</h3>
                     </div>
                     <div class="description" id="left">
-                        <div class="row g-0">
-                            <div class="col-md-6">
+                        <div class="row g-lg-0 g-4">
+                            <div class="col-lg-6 col-12">
                                 <div class="img_description">
                                     <img src="assets/images/service/img-service-left.jpg" class="img-fluid w-100" alt="">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-lg-6 col-12">
                                 <div class="caption_img">
                                     <h3><span>Rent</span> your favorite book
                                         fairly easy on <span>Lidia</span>!</h3>
@@ -162,8 +161,8 @@
                         </div>
                     </div>
                     <div class="description" id="right">
-                        <div class="row g-0">
-                            <div class="col-md-6">
+                        <div class="row g-lg-0 g-4">
+                            <div class="col-lg-6 col-12">
                                 <div class="caption_img">
                                     <h3>Quick Book Rentals:
                                         <br> <span>Dive</span> into <span>Reading</span> Instantly
@@ -181,7 +180,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-lg-6 col-12">
                                 <div class="img_description">
                                     <img src="assets/images/service/img-service-right.jpg" class="img-fluid w-100" alt="">
                                 </div>
@@ -224,7 +223,7 @@
                     ?>
 
                     <div class="list_review">
-                        <div class="row">
+                        <div class="row gy-4">
                             <?php foreach ($listReview as $value) : ?>
                                 <div class="col-md-4">
                                     <div class="item">
@@ -263,7 +262,7 @@
         <section class="section_6 copyright">
             <div class="custom container">
                 <div class="content">
-                    <div class="row">
+                    <div class="row gy-4">
                         <div class="col-md-4">
                             <div class="item">
                                 <h3>Managed By</h3>
@@ -276,7 +275,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="item">
-                                <h3>Managed By</h3>
+                                <h3>Social Media</h3>
                                 <div class="caption">
                                     <div class="img d-flex gap-3">
                                         <img src="assets/images/Twitter.png" class="img-fluid" alt="">
@@ -288,7 +287,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="item">
-                                <h3>Managed By</h3>
+                                <h3>Slogan</h3>
                                 <div class="caption">
                                     <div class="tag">
                                         <p>#RentFavBooks</p>
@@ -304,7 +303,45 @@
             </div>
         </section>
     </div>
-    <script src="assets/js/main.js" text="javascript"></script>
+    <script src="assets/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/jquery/dist/jquery.min.js"></script>
+    <script src="assets/jquery/dist/jquery.slim.min.js"></script>
+    <script src="assets/js/sticky.js" type="text/javascript"></script>
+    <script>
+        $(function() {
+            $(".shy-header").shyheader({
+                classname: "on_sticky",
+                container: 'main-content'
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(window).scroll(function() {
+                // Mendapatkan posisi scroll
+                var scrollPosition = $(this).scrollTop();
+
+                console.log(scrollPosition);
+
+                // Cek jika posisi scroll sudah lebih dari 100px
+                if (scrollPosition > 100) {
+                    // Ubah warna latar belakang elemen dengan class tertentu
+                    $(".shy-header").css("background-color", "#fff");
+                    $(".nav-item .login.nav-link").css("background-color", "#4475f2");
+                    $(".nav-item .login.nav-link").css("color", "#fff");
+                    $("header.header.shy-header").css("border-bottom", "1px solid #4475f2");
+                    $("nav.navbar.navbar-expand-lg").css("padding", "34px 0px 20px 0px");
+                } else {
+                    // Kembalikan warna latar belakang ke nilai default jika posisi scroll kurang dari atau sama dengan 100px
+                    $(".shy-header").css("background-color", "initial");
+                    $(".nav-item .login.nav-link").css("background-color", "#fff");
+                    $(".nav-item .login.nav-link").css("color", "#000");
+                    $("header.header.shy-header").css("border-bottom", "initial");
+                    $("nav.navbar.navbar-expand-lg").css("padding", "71px 0px 54px 0px");
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

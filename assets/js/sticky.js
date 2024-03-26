@@ -1,84 +1,90 @@
-(function($) {
+(function ($, window, document, undefined) {
+  "use strict";
 
-    $.fn.stickify = function (options) {
+  $.shyheader = function (el, options) {
+    var base = this;
 
-        var $selector = this;
+    base.$el = $(el);
+    base.el = el;
 
-        // Set default options
-        var defaultOptions = {
-            position: 'top',
-            animationDuration: '0.4',
-            reverse: false,
-            width: '100%',
-            zIndex: '9999'
-        };
+    base.$el.data("shyheader", base);
 
-        var opts = $.extend({}, defaultOptions, options);
+    var IS_SCROLLING = false;
+    var SCROLL = 0;
+    var OLD_OFFSET = 0;
+    var CURRENT_OFFSET = 0;
+    var DELTA = 5;
+    var HEADER_HEIGHT = 0;
+    var BODY = "";
 
-        // Hide element on scroll down
-        var isScroll;
-        var lastScrollTop = 0;
-        var index = 5;
-        var elementHeight = $selector.outerHeight();
+    base.initialize = function () {
+      base.options = $.extend({}, $.shyheader.defaultOptions, options);
 
-        $(window).scroll(function(event){
-            isScroll = true;
-        });
+      HEADER_HEIGHT = base.$el.outerHeight(true);
 
-        setInterval(function() {
-            if (isScroll && opts.reverse === true) {
-                hasScrolled();
-                isScroll = false;
-            } else {
-                fixedHeader();
-            }
-        }, 250);
+      if (base.options.container !== "undefined") {
+        BODY = $("." + base.options.container);
+        //BODY.css("padding-top", HEADER_HEIGHT+"px");
+        base.options.offsetContentFlag = true;
+      }
 
-        function fixedHeader() {
-
-            var scroll = $(window).scrollTop();
-
-            if (scroll >= 100) $selector
-                .css('position', 'fixed')
-                .css(opts.position, '0')
-                .css('width', opts.width)
-                .css('z-index', opts.zIndex)
-        }
-
-        function hasScrolled() {
-            var scrollTop = $(this).scrollTop();
-
-            // Make sure to scroll more than index
-            if(Math.abs(lastScrollTop - scrollTop) <= index)
-                return;
-
-            if (scrollTop > lastScrollTop && scrollTop > elementHeight){
-                // Scroll Down
-                $selector
-                    .css('position', 'fixed')
-                    .css(opts.position, '0')
-                    .css('transition', opts.position + ' ' + opts.animationDuration + 's ease-in-out')
-                    .css(opts.position, '-1000px')
-                    .css('width', opts.width)
-                    .css('z-index', opts.zIndex)
-
-            } else {
-                // Scroll Up
-                if(scrollTop + $(window).height() < $(document).height()) {
-                    $selector
-                        .css(opts.position, '-1000px')
-                        .css('transition', opts.position + ' ' + opts.animationDuration + 's ease-in-out')
-                        .css(opts.position, '0')
-                        .css('width', opts.width)
-                        .css('z-index', opts.zIndex)
-                }
-            }
-
-            lastScrollTop = scrollTop;
-        }
-
-        return this;
-
+      window.addEventListener("scroll", base.triggerScroll, false);
     };
 
-})(jQuery);
+    base.triggerScroll = function () {
+      IS_SCROLLING = true;
+      SCROLL = document.body.scrollTop || window.pageYOffset;
+      base.checkScrollPosition();
+    };
+
+    base.checkScrollPosition = function () {
+      if (base.options.offsetContentFlag) {
+        if (SCROLL >= HEADER_HEIGHT) {
+          base.watch();
+        }
+      } else {
+        base.watch();
+      }
+    };
+
+    base.watch = function () {
+      if (IS_SCROLLING) {
+        base.getDirection();
+        IS_SCROLLING = false;
+      }
+    };
+
+    base.getDirection = function () {
+      CURRENT_OFFSET = SCROLL;
+
+      if (Math.abs(OLD_OFFSET - CURRENT_OFFSET) <= DELTA) {
+        return;
+      }
+
+      if (CURRENT_OFFSET > OLD_OFFSET) {
+        base.$el.addClass(base.options.classname);
+      } else {
+        if (CURRENT_OFFSET + $(window).height() < $(document).height()) {
+          base.$el.removeClass(base.options.classname);
+        }
+      }
+
+      OLD_OFFSET = CURRENT_OFFSET;
+    };
+
+    base.initialize();
+  };
+
+  $.shyheader.defaultOptions = {
+    classname: "on_sticky",
+    container: "undefined",
+    offsetContentFlag: false,
+  };
+
+  $.fn.shyheader = function (options) {
+    return this.each(function () {
+      var shyheader = new $.shyheader(this, options);
+    });
+  };
+})(jQuery, window, document);
+
